@@ -5,7 +5,7 @@ async function createOrder() {
   const items = ['RI0002', 'CB0004']
   const connection = await mysql.createConnection(config.db);
   await connection.execute('SET TRANSACTION ISOLATION LEVEL READ COMMITTED');
-  console.log('Finished setting the isolaction level to read committed');
+  console.log('Finished setting the isolation level to read committed');
   //set wait timeout and lock wait timeout as per need.
   await connection.beginTransaction();
   try {
@@ -32,12 +32,12 @@ async function createOrder() {
       `UPDATE product SET quantity=quantity - 1 WHERE sku IN (?, ?)`,
       items
     );
-    console.log(`Deducted quantites by 1 for ${items.join()}`);
+    console.log(`Deducted quantities by 1 for ${items.join()}`);
     await connection.commit();
     const [rows,] = await connection.execute('SELECT LAST_INSERT_ID() as order_id');
     return `order created with id ${rows[0].order_id}`;
   } catch (err) {
-    console.error(`Error occured while ceating order: ${err.message}`, err);
+    console.error(`Error occurred while creating order: ${err.message}`, err);
     connection.rollback();
     console.info('Rollback successful');
     return 'error creating order';
