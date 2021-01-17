@@ -11,7 +11,10 @@ async function createOrder() {
   try {
     await connection.execute('SELECT id, name FROM product WHERE sku IN (?, ?) FOR UPDATE', items);
     console.log(`Locked rows for skus ${items.join()}`);
-    const [itemsToOrder,] = await connection.execute('SELECT name, quantity, price from product WHERE sku IN (?, ?)', items);
+    const [itemsToOrder,] = await connection.execute(
+      'SELECT name, quantity, price from product WHERE sku IN (?, ?) ORDER BY id',
+      items
+    );
     console.log('Selected quantities for items');
     let orderTotal = 0;
     let orderItems = [];
